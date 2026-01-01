@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gaussian Blur Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0f172a;
+      --fg: #e2e8f0;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --border: #334155;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji";
+      background: var(--bg);
+      color: var(--fg);
+      display: grid;
+      min-height: 100vh;
+      grid-template-rows: auto 1fr;
+    }
+    header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+    }
+    .wrap {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      background: rgba(255,255,255,0.03);
+    }
+    .panel h2 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    input[type="range"] {
+      width: 100%;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+    canvas {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #0b1220;
+    }
+    .controls-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #111827;
+      color: var(--fg);
+      cursor: pointer;
+    }
+    .small {
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .accent {
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Gaussian Blur Demo (Canvas + JavaScript)</h1>
+  </header>
+
+  <div class="wrap">
+    <section class="panel">
+      <h2>Controls</h2>
+
+      <label for="file">Upload image</label>
+      <input id="file" type="file" accept="image/*" />
+
+      <label for="sigma">Blur strength (sigma)</label>
+      <input id="sigma" type="range" min="0" max="8" step="0.1" value="2" />
+      <div class="small">Sigma: <span id="sigmaVal" class="accent">2.0</span> (larger = more blur)</div>
+
+      <label for="kernelSize">Kernel size</label>
+      <input id="kernelSize" type="range" min="3" max="31" step="2" value="15" />
+      <div class="small">Size: <span id="kernelVal" class="accent">15</span> (odd numbers only)</div>
+
+      <div class="controls-row">
+        <label><input id="grayscale" type="checkbox" /> Convert to grayscale</label>
+        <button id="resetBtn" class="btn">Reset</button>
+        <button id="downloadBtn" class="btn">Download blurred</button>
+      </div>
+
+      <p class="small">
+        Tip: Kernel size should be big enough relative to sigma (rule of thumb: size ≈ 6·sigma + 1).
+      </p>
+    </section>
+
+    <section class="panel">
+      <h2>Preview</h2>
+      <div class="grid">
+        <div>
+          <div class="small">Original</div>
+          <canvas id="canvasOriginal"></canvas>
+        </div>
+        <div>
+          <div class="small">Gaussian blurred</div>
+          <canvas id="canvasBlurred"></canvas>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const fileInput = document.getElementById('file');
+    const sigmaInput = document.getElementById('sigma');
+    const kernelInput = document.getElementById('kernelSize');
+    const grayInput = document.getElementById('grayscale');
+    const sigmaVal = document.getElementById('sigmaVal');
+    const kernelVal = document.getElementById('kernelVal');
+    const resetBtn = document.getElementById('resetBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+
+    const canvasOriginal = document.getElementById('canvasOriginal');
+    const canvasBlurred = document.getElementById('canvasBlurred');
+    const ctxO = canvasOriginal.getContext('2d');
+    const ctxB = canvasBlurred.getContext('2d');
+
+    let originalImageData = null;
+
+    // Utility: clamp
+    const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+
+    // Generate 1D Gaussian kernel (normalized to sum=1)
+    function gaussianKernel1D(sigma, size) {
+      if (sigma <= 0) {
+        // No blur; delta kernel
+        const k = new Float32Array(size);
+        const mid = (size - 1) / 2;
+        k[mid] = 1;
+        return k;
+      }
+      const kernel = new Float32Array(size);
+      const mid = (size - 1) / 2;
+      const sigma2 = sigma * sigma;
+      const denom = 2 * sigma2;
+      let sum = 0;
+      for (let i = 0; i < size; i++) {
+        const x = i - mid;
+        const v = Math.exp(-(x * x) / denom);
+        kernel[i] = v;
+        sum += v;
+      }
+      // Normalize
+      for (let i = 0; i < size; i++) kernel[i] /= sum;
+      return kernel;
+    }
+
+    // Separable convolution: horizontal then vertical for RGBA
+    function separableConvolveRGBA(src, width, height, kernel) {
+      const size = kernel.length;
+      const half = (size - 1) / 2;
+
+      const tmp = new Uint8ClampedArray(src.length);
+      const dst = new Uint8ClampedArray(src.length);
+
+      // Horizontal pass
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          let r = 0, g = 0, b = 0, a = 0;
+          for (let k = -half; k <= half; k++) {
+            const xx = clamp(x + k, 0, width - 1);
+            const idx = (y * width + xx) * 4;
+            const w = kernel[k + half];
+            r += src[idx] * w;
+            g += src[idx + 1] * w;
+            b += src[idx + 2] * w;
+            a += src[idx + 3] * w;
+          }
+          const outIdx = (y * width + x) * 4;
+          tmp[outIdx] = r;
+          tmp[outIdx + 1] = g;
+          tmp[outIdx + 2] = b;
+          tmp[outIdx + 3] = a;
+        }
+      }
+
+      // Vertical pass
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          let r = 0, g = 0, b = 0, a = 0;
+          for (let k = -half; k <= half; k++) {
+            const yy = clamp(y + k, 0, height - 1);
+            const idx = (yy * width + x) * 4;
+            const w = kernel[k + half];
+            r += tmp[idx] * w;
+            g += tmp[idx + 1] * w;
+            b += tmp[idx + 2] * w;
+            a += tmp[idx + 3] * w;
+          }
+          const outIdx = (y * width + x) * 4;
+          dst[outIdx] = r;
+          dst[outIdx + 1] = g;
+          dst[outIdx + 2] = b;
+          dst[outIdx + 3] = a;
+        }
+      }
+
+      return dst;
+    }
+
+    // Optional grayscale conversion for clarity
+    function toGrayscaleRGBA(src) {
+      const out = new Uint8ClampedArray(src.length);
+      for (let i = 0; i < src.length; i += 4) {
+        const r = src[i], g = src[i + 1], b = src[i + 2], a = src[i + 3];
+        const y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        out[i] = out[i + 1] = out[i + 2] = y;
+        out[i + 3] = a;
+      }
+      return out;
+    }
+
+    function renderBlur() {
+      if (!originalImageData) return;
+
+      const sigma = parseFloat(sigmaInput.value);
+      const size = parseInt(kernelInput.value, 10);
+
+      sigmaVal.textContent = sigma.toFixed(1);
+      kernelVal.textContent = size;
+
+      const width = canvasOriginal.width;
+      const height = canvasOriginal.height;
+
+      const src = originalImageData.data;
+      const srcData = grayInput.checked ? toGrayscaleRGBA(src) : src;
+
+      const kernel = gaussianKernel1D(sigma, size);
+      const blurred = separableConvolveRGBA(srcData, width, height, kernel);
+
+      const outImageData = new ImageData(blurred, width, height);
+      ctxB.putImageData(outImageData, 0, 0);
+    }
+
+    function drawImageToCanvases(img) {
+      const maxW = 900;
+      const scale = Math.min(1, maxW / img.width);
+      const w = Math.max(1, Math.floor(img.width * scale));
+      const h = Math.max(1, Math.floor(img.height * scale));
+
+      canvasOriginal.width = w;
+      canvasOriginal.height = h;
+      canvasBlurred.width = w;
+      canvasBlurred.height = h;
+
+      ctxO.clearRect(0, 0, w, h);
+      ctxB.clearRect(0, 0, w, h);
+
+      ctxO.drawImage(img, 0, 0, w, h);
+      originalImageData = ctxO.getImageData(0, 0, w, h);
+
+      renderBlur();
+    }
+
+    // Load default image (optional: small inline SVG pattern)
+    function loadDefault() {
+      const svg = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="640" height="360">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+              <stop offset="0" stop-color="#22c55e"/>
+              <stop offset="1" stop-color="#0ea5e9"/>
+            </linearGradient>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#g)"/>
+          <g fill="#0b1220" opacity="0.5">
+            <circle cx="120" cy="80" r="40"/>
+            <circle cx="280" cy="120" r="30"/>
+            <circle cx="460" cy="60" r="50"/>
+            <rect x="180" y="200" width="120" height="60"/>
+            <rect x="420" y="220" width="80" height="40"/>
+          </g>
+          <text x="24" y="340" font-family="monospace" font-size="20" fill="#0b1220">Gaussian Blur Demo</text>
+        </svg>`;
+      const img = new Image();
+      img.onload = () => drawImageToCanvases(img);
+      img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    }
+
+    // Events
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        drawImageToCanvases(img);
+      };
+      img.src = url;
+    });
+
+    sigmaInput.addEventListener('input', renderBlur);
+    kernelInput.addEventListener('input', renderBlur);
+    grayInput.addEventListener('change', renderBlur);
+
+    resetBtn.addEventListener('click', () => {
+      sigmaInput.value = 2;
+      kernelInput.value = 15;
+      grayInput.checked = false;
+      renderBlur();
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'blurred.png';
+      link.href = canvasBlurred.toDataURL('image/png');
+      link.click();
+    });
+
+    // Initialize
+    loadDefault();
+  </script>
+</body>
+</html>

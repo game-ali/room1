@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Portfolio Planning Notes - Ali</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    h1, h2, h3 {
+      color: #fbbf24;
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    h2 {
+      border-bottom: 1px solid #1f2937;
+      padding-bottom: 0.4rem;
+    }
+
+    p {
+      margin: 0.3rem 0 0.8rem;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+      margin: 0.3rem 0 0.8rem;
+    }
+
+    li {
+      margin-bottom: 0.25rem;
+    }
+
+    .tagline {
+      text-align: center;
+      color: #9ca3af;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .note-box {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 0.75rem;
+      padding: 1.25rem 1.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .label {
+      font-weight: 600;
+      color: #fbbf24;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    code {
+      background: #020617;
+      color: #a5b4fc;
+      padding: 0.1rem 0.3rem;
+      border-radius: 0.25rem;
+      font-size: 0.9em;
+    }
+
+    .section-title {
+      font-weight: 600;
+      color: #facc15;
+    }
+
+    .sub {
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, transparent, #374151, transparent);
+      margin: 2rem 0;
+    }
+
+    .todo {
+      background: #022c22;
+      border-color: #064e3b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Professional Portfolio Notes</h1>
+    <p class="tagline">
+      Plan for a front-end portfolio using HTML, CSS, and JavaScript.
+    </p>
+
+    <div class="note-box">
+      <div class="label">Goal</div>
+      <p>
+        Create a clean, professional portfolio that proves front-end skills (HTML, CSS, JavaScript)
+        and showcases real projects and design sense.
+      </p>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>1. Hero / Introduction Section</h2>
+    <div class="note-box">
+      <p class="section-title">What this section is</p>
+      <p>
+        This is the first screen visitors see. It quickly tells them who you are, what you do, and
+        gives them a clear next action.
+      </p>
+
+      <p class="section-title">Content to include</p>
+      <ul>
+        <li><strong>Name:</strong> e.g., <em>Ali</em>.</li>
+        <li><strong>Role:</strong> Front-End Developer &amp; Graphic Designer.</li>
+        <li><strong>Short tagline:</strong> “I build clean, responsive web experiences.”</li>
+        <li><strong>One call-to-action:</strong> Button to <em>View My Projects</em> or <em>Download CV</em>.</li>
+      </ul>
+
+      <p class="section-title">Notes for implementation</p>
+      <ul>
+        <li>Use a full-height hero with centered content.</li>
+        <li>Optional: small photo or simple avatar.</li>
+        <li>Use smooth scroll from the hero button to the projects section.</li>
+      </ul>
+    </div>
+
+    <h2>2. Projects Section</h2>
+    <div class="note-box">
+      <p class="section-title">What this section is</p>
+      <p>
+        The most important part of the portfolio. Each project should clearly show what you can build
+        with HTML, CSS, and JavaScript.
+      </p>
+
+      <p class="section-title">For each project, include</p>
+      <ul>
+        <li><strong>Title:</strong> Clear name of the project.</li>
+        <li><strong>Screenshot / preview:</strong> High-quality image of the UI.</li>
+        <li><strong>Short description:</strong> What the project does and why you built it.</li>
+        <li><strong>Tech stack:</strong> Badges or text (HTML, CSS, JavaScript, etc.).</li>
+        <li><strong>Links:</strong> One link to live demo, one to GitHub repository.</li>
+      </ul>
+
+      <p class="section-title">Good project ideas</p>
+      <ul>
+        <li><strong>Responsive landing page:</strong> With clean layout and animations.</li>
+        <li><strong>Interactive app:</strong> To-do app, calculator, weather app, notes app.</li>
+        <li><strong>UI components:</strong> Modal, image slider, tabs, accordion, navbar.</li>
+        <li><strong>Design-to-code:</strong> Convert a design into pixel-perfect HTML/CSS.</li>
+      </ul>
+
+      <p class="section-title">Layout notes</p>
+      <ul>
+        <li>Use a grid layout (2 or 3 columns on desktop, 1 on mobile).</li>
+        <li>Keep spacing consistent and text short.</li>
+        <li>Highlight at least 3–6 strong projects.</li>
+      </ul>
+    </div>
+
+    <h2>3. Skills Section</h2>
+    <div class="note-box">
+      <p class="section-title">What this section is</p>
+      <p>
+        A clear list of what you can work with. It supports the projects by showing your tech range.
+      </p>
+
+      <p class="section-title">Core skills</p>
+      <ul>
+        <li><strong>HTML5:</strong> Semantic structure, accessibility basics.</li>
+        <li><strong>CSS3:</strong> Flexbox, Grid, transitions, responsive design.</li>
+        <li><strong>JavaScript:</strong> DOM manipulation, events, ES6+, basic APIs (fetch).</li>
+      </ul>
+
+      <p class="section-title">Additional skills and tools</p>
+      <ul>
+        <li><strong>Version control:</strong> Git and GitHub.</li>
+        <li><strong>Design tools:</strong> CorelDRAW, Figma.</li>
+        <li><strong>Debugging:</strong> Chrome DevTools.</li>
+      </ul>
+
+      <p class="section-title">Presentation ideas</p>
+      <ul>
+        <li>Use simple tags or badges, grouped into “Frontend” and “Tools”.</li>
+        <li>Optional: small progress bars or skill levels, but keep it minimal.</li>
+      </ul>
+    </div>
+
+    <h2>4. About Me Section</h2>
+    <div class="note-box">
+      <p class="section-title">What this section is</p>
+      <p>
+        A short story about who you are, your background, and how you approach work.
+      </p>
+
+      <p class="section-title">Key points to mention</p>
+      <ul>
+        <li><strong>Background:</strong> From informatics and design practice to front-end development.</li>
+        <li><strong>Strengths:</strong> Problem-solving, attention to detail, design sense.</li>
+        <li><strong>Work style:</strong> Independent learner, reflective, consistent.</li>
+        <li><strong>Current focus:</strong> Improving JavaScript skills and building real projects.</li>
+      </ul>
+
+      <p class="section-title">Tone</p>
+      <ul>
+        <li>Honest, simple, confident (no need to brag, just be clear).</li>
+        <li>1–3 short paragraphs, easy to scan.</li>
+      </ul>
+    </div>
+
+    <h2>5. Contact Section</h2>
+    <div class="note-box">
+      <p class="section-title">What this section is</p>
+      <p>
+        A simple way for people to reach you for work, collaboration, or questions.
+      </p>
+
+      <p class="section-title">Details to include</p>
+      <ul>
+        <li><strong>Email:</strong> Main way to contact you.</li>
+        <li><strong>GitHub:</strong> Link to your profile.</li>
+        <li><strong>LinkedIn:</strong> If available.</li>
+        <li><strong>Optional:</strong> WhatsApp link or other socials.</li>
+      </ul>
+
+      <p class="section-title">Form idea</p>
+      <ul>
+        <li>Simple form with name, email, and message.</li>
+        <li>Use basic client-side validation with JavaScript.</li>
+      </ul>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>6. Optional Extras</h2>
+    <div class="note-box">
+      <p class="section-title">Case studies</p>
+      <p>
+        For selected projects, write a short breakdown: the problem, your approach, tools used, challenges,
+        and what you learned.
+      </p>
+
+      <p class="section-title">Blog or notes</p>
+      <p>
+        Write short posts about CSS layouts, JavaScript tricks, or how you turn a design into code.
+      </p>
+
+      <p class="section-title">Interactive details</p>
+      <ul>
+        <li>Theme toggle (light/dark mode) using JavaScript.</li>
+        <li>Smooth scrolling navigation.</li>
+        <li>Subtle hover and scroll animations.</li>
+      </ul>
+    </div>
+
+    <h2>7. Suggested HTML Structure</h2>
+    <div class="note-box">
+      <p class="section-title">Base layout</p>
+      <p>Use this as the skeleton for the actual portfolio website:</p>
+      <pre><code>&lt;header&gt;
+  &lt;nav&gt;...&lt;/nav&gt;
+  &lt;section id="hero"&gt;...&lt;/section&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;section id="projects"&gt;...&lt;/section&gt;
+  &lt;section id="skills"&gt;...&lt;/section&gt;
+  &lt;section id="about"&gt;...&lt;/section&gt;
+  &lt;section id="contact"&gt;...&lt;/section&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;...&lt;/footer&gt;
+</code></pre>
+    </div>
+
+    <div class="divider"></div>
+
+    <h2>8. To-Do List</h2>
+    <div class="note-box todo">
+      <p class="section-title">Next steps</p>
+      <ul>
+        <li>Create real HTML files for each section (start with hero and projects).</li>
+        <li>Pick 3–6 of your best projects and prepare screenshots and descriptions.</li>
+        <li>Set up a GitHub repository for the portfolio.</li>
+        <li>Deploy the site later using GitHub Pages, Netlify, or similar.</li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>
