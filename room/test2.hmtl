@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Front-End Developer Portfolio — Hallway</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ui">
+    <div class="brand">
+      <span class="dot"></span> Your Name
+    </div>
+    <div class="controls">
+      <button id="toggleMobileView" aria-label="Toggle mobile view">Mobile view</button>
+      <button id="resetCamera" aria-label="Reset camera">Reset camera</button>
+    </div>
+  </div>
+
+  <main class="scene" aria-label="3D hallway portfolio">
+    <!-- Camera wrapper allows gentle rotation -->
+    <div class="camera">
+      <!-- Hallway group -->
+      <div class="hallway">
+
+        <!-- Floor -->
+        <div class="plane floor"></div>
+
+        <!-- Ceiling with achievements -->
+        <div class="plane ceiling">
+          <div class="tile badge">
+            <h4>Certifications</h4>
+            <ul>
+              <li>Google Mobile Web Specialist</li>
+              <li>Meta Front-End Developer</li>
+              <li>freeCodeCamp Responsive Web Design</li>
+            </ul>
+          </div>
+          <div class="tile badge">
+            <h4>Open Source</h4>
+            <ul>
+              <li>PRs to awesome-frontend</li>
+              <li>Maintainer: css-utilities</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Left wall: About & Skills -->
+        <div class="plane wall wall-left">
+          <section class="panel about">
+            <h1>Front-End Developer</h1>
+            <p>I craft fast, accessible, and elegant web interfaces. I love translating ideas into polished, production-ready experiences.</p>
+            <p class="tagline">Crafting sleek, responsive web experiences.</p>
+          </section>
+
+          <section class="panel skills">
+            <h2>Skills & Tech Stack</h2>
+            <div class="skills-grid">
+              <div class="skill"><span>HTML</span></div>
+              <div class="skill"><span>CSS</span></div>
+              <div class="skill"><span>Sass</span></div>
+              <div class="skill"><span>JavaScript</span></div>
+              <div class="skill"><span>TypeScript</span></div>
+              <div class="skill"><span>React</span></div>
+              <div class="skill"><span>Next.js</span></div>
+              <div class="skill"><span>Vue</span></div>
+              <div class="skill"><span>Tailwind</span></div>
+              <div class="skill"><span>GSAP</span></div>
+              <div class="skill"><span>Testing Library</span></div>
+              <div class="skill"><span>Jest</span></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right wall: Projects -->
+        <div class="plane wall wall-right">
+          <section class="panel projects">
+            <h2>Featured Projects</h2>
+
+            <div class="project-grid">
+              <article class="project" data-project="p1">
+                <div class="frame">
+                  <img alt="Project 1 thumbnail" src="https://picsum.photos/seed/p1/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>ShopFlow</h3>
+                  <p>Headless commerce UI with React + Tailwind, 95+ Lighthouse.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p1">View case study</a>
+                    <a href="#" class="btn ghost">Live demo</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="project" data-project="p2">
+                <div class="frame">
+                  <img alt="Project 2 thumbnail" src="https://picsum.photos/seed/p2/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>PulseUI</h3>
+                  <p>Component library with theming and accessibility baked in.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p2">View case study</a>
+                    <a href="#" class="btn ghost">Docs</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="project" data-project="p3">
+                <div class="frame">
+                  <img alt="Project 3 thumbnail" src="https://picsum.photos/seed/p3/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>CityGlide</h3>
+                  <p>Map-driven transit app with offline-first PWA features.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p3">View case study</a>
+                    <a href="#" class="btn ghost">Live demo</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <!-- End portal: Contact -->
+        <a class="portal" href="#contact" aria-label="Contact portal">
+          <span class="glow"></span>
+          <span class="cta">Let's connect</span>
+        </a>
+
+        <!-- Contact panel sitting beyond the portal -->
+        <section id="contact" class="contact-panel">
+          <h2>Contact</h2>
+          <p>Interested in working together? Reach out and let’s build something great.</p>
+          <form class="contact-form" action="#" method="post">
+            <label>
+              <span>Name</span>
+              <input type="text" name="name" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="4" required></textarea>
+            </label>
+            <button type="submit" class="btn">Send</button>
+          </form>
+          <div class="socials">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+            <a href="#">CodePen</a>
+          </div>
+          <a class="resume" href="#" download>Download resume (PDF)</a>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <div class="modal" id="modal-p1" aria-hidden="true" role="dialog" aria-label="Project 1 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>ShopFlow — Case Study</h3>
+      <p>Built a performant storefront using React, Tailwind, and a headless CMS. Implemented SSR for SEO, image optimization, and code splitting.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Front-end lead</li>
+        <li><strong>Highlights:</strong> Accessibility score 100, 95+ performance</li>
+        <li><strong>Tech:</strong> React, Next.js, Tailwind, Lighthouse CI</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-p2" aria-hidden="true" role="dialog" aria-label="Project 2 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>PulseUI — Case Study</h3>
+      <p>Designed a modular component library emphasizing semantic HTML, ARIA patterns, and theme tokens with CSS variables.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Creator</li>
+        <li><strong>Highlights:</strong> Theming, keyboard navigation, docs site</li>
+        <li><strong>Tech:</strong> Vite, TypeScript, Storybook</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-p3" aria-hidden="true" role="dialog" aria-label="Project 3 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>CityGlide — Case Study</h3>
+      <p>Built an offline-first PWA integrating map tiles and service workers. Implemented background sync and install prompts.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Front-end engineer</li>
+        <li><strong>Highlights:</strong> PWA, offline caching, responsive maps</li>
+        <li><strong>Tech:</strong> Vue, Workbox, Mapbox GL</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

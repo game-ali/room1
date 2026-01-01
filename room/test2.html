@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Front-End Developer Portfolio — Hallway</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+<style>
+  :root {
+  --bg: #0a0b12;
+  --panel: #121423;
+  --text: #e6e8ef;
+  --muted: #a9afc7;
+  --neon: #7c5cff;
+  --accent: #2de2e6;
+  --danger: #ff4d6d;
+  --glow: 0 0 20px rgba(124, 92, 255, 0.4), 0 0 40px rgba(45, 226, 230, 0.2);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: var(--text);
+  background: radial-gradient(1200px 600px at 50% 20%, #0e1020 0%, var(--bg) 50%, #05060b 100%);
+  overflow: hidden;
+}
+
+/* Top UI */
+.ui {
+  position: fixed; inset: 16px auto auto 16px; right: 16px; z-index: 10;
+  display: flex; gap: 12px; align-items: center; justify-content: space-between; width: calc(100% - 32px);
+}
+.brand {
+  display: flex; gap: 10px; align-items: center; font-weight: 800; letter-spacing: 0.2px;
+}
+.brand .dot {
+  width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(45deg, var(--neon), var(--accent));
+  box-shadow: var(--glow);
+}
+.controls button {
+  background: #1a1c2e; color: var(--text); border: 1px solid #2a2d4a; border-radius: 10px;
+  padding: 8px 12px; cursor: pointer; transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+.controls button:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+
+/* Scene and camera */
+.scene {
+  position: relative; width: 100vw; height: 100vh; perspective: 1200px; perspective-origin: 50% 40%;
+}
+.camera {
+  width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(.2,.8,.2,1);
+}
+.hallway {
+  position: absolute; inset: 0; margin: auto;
+  width: 1400px; height: 900px;
+  transform-style: preserve-3d;
+  transform: translateZ(-800px) rotateX(10deg);
+}
+
+/* Base planes */
+.plane {
+  position: absolute; background: var(--panel); opacity: 0.98; box-shadow: 0 10px 40px rgba(0,0,0,0.6) inset;
+}
+
+/* Floor and ceiling */
+.floor {
+  width: 1400px; height: 900px;
+  transform: translateZ(0) rotateX(90deg) translateZ(-450px);
+  background: linear-gradient(90deg, #0f1122 0%, #0c0e1a 100%);
+}
+.ceiling {
+  width: 1400px; height: 900px;
+  transform: translateZ(0) rotateX(-90deg) translateZ(-450px);
+  background: linear-gradient(90deg, #10122a 0%, #0b0d18 100%);
+}
+
+/* Ceiling tiles */
+.tile.badge {
+  position: absolute; top: 120px; left: 160px; width: 420px; padding: 18px 20px;
+  background: rgba(18, 20, 35, 0.85); border: 1px solid #2a2d4a; border-radius: 14px;
+  color: var(--muted); box-shadow: var(--glow);
+}
+.tile.badge + .tile.badge { left: 620px; }
+.tile.badge h4 { margin: 0 0 8px; color: var(--accent); }
+
+/* Walls */
+.wall {
+  width: 1400px; height: 900px;
+  background: linear-gradient(180deg, #0f1122 0%, #0c0e1a 100%);
+}
+.wall-left {
+  transform: translateX(-700px) rotateY(90deg) translateZ(0);
+}
+.wall-right {
+  transform: translateX(700px) rotateY(-90deg) translateZ(0);
+}
+
+/* Panels on walls */
+.panel {
+  position: absolute; background: rgba(18, 20, 35, 0.9); border: 1px solid #2a2d4a;
+  border-radius: 16px; padding: 18px 20px; width: 500px; box-shadow: var(--glow);
+}
+.about {
+  top: 120px; left: 120px;
+}
+.about h1 { margin: 0 0 10px; font-size: 28px; }
+.tagline { color: var(--accent); font-weight: 600; }
+
+.skills {
+  top: 380px; left: 120px;
+}
+.skills h2 { margin: 0 0 12px; font-size: 22px; }
+.skills-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.skill {
+  display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px;
+  background: #171a2f; border: 1px solid #2a2d4a; border-radius: 12px; color: var(--muted);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.skill:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(0,0,0,0.4); }
+
+/* Projects wall */
+.projects {
+  top: 120px; right: 120px; width: 620px;
+}
+.projects h2 { margin: 0 0 12px; font-size: 22px; }
+.project-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+.project {
+  display: grid; grid-template-columns: 220px 1fr; gap: 14px; align-items: start;
+  padding: 12px; background: #171a2f; border: 1px solid #2a2d4a; border-radius: 14px;
+}
+.frame {
+  aspect-ratio: 3 / 2; overflow: hidden; border-radius: 12px; border: 1px solid #2a2d4a;
+}
+.frame img {
+  width: 100%; height: 100%; object-fit: cover; transform: scale(1.02);
+  transition: transform 0.4s cubic-bezier(.2,.8,.2,1);
+}
+.project:hover .frame img { transform: scale(1.08); }
+
+.meta h3 { margin: 0 0 6px; }
+.meta p { margin: 0 0 10px; color: var(--muted); }
+
+.links { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 12px;
+  background: linear-gradient(45deg, var(--neon), var(--accent)); color: #0b0d18; font-weight: 700;
+  border: none; cursor: pointer; text-decoration: none;
+}
+.btn.ghost {
+  background: transparent; color: var(--text); border: 1px solid #2a2d4a;
+}
+
+/* Portal */
+.portal {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) translateZ(-500px);
+  width: 320px; height: 420px; display: grid; place-items: center; text-decoration: none;
+}
+.portal .glow {
+  position: absolute; inset: 0; border-radius: 18px;
+  background: radial-gradient(120px 220px at 50% 60%, rgba(45,226,230,0.35), rgba(124,92,255,0.24));
+  box-shadow: 0 0 80px rgba(45,226,230,0.25), 0 0 120px rgba(124,92,255,0.2);
+  filter: blur(2px);
+}
+.portal .cta {
+  position: relative; z-index: 2; padding: 10px 16px; border-radius: 12px;
+  background: rgba(18, 20, 35, 0.8); border: 1px solid #2a2d4a; color: var(--text);
+  box-shadow: var(--glow); font-weight: 700;
+}
+
+/* Contact panel */
+.contact-panel {
+  position: absolute; left: 50%; top: 50%;
+  transform: translate(-50%, -50%) translateZ(-900px);
+  width: 600px; padding: 18px 20px; border-radius: 16px; background: rgba(18,20,35,0.92);
+  border: 1px solid #2a2d4a; box-shadow: var(--glow);
+}
+.contact-form { display: grid; gap: 10px; margin-top: 10px; }
+.contact-form label { display: grid; gap: 6px; }
+.contact-form input, .contact-form textarea {
+  background: #121423; border: 1px solid #2a2d4a; border-radius: 10px; color: var(--text);
+  padding: 10px 12px;
+}
+.socials { display: flex; gap: 12px; margin-top: 10px; }
+.socials a { color: var(--accent); text-decoration: none; }
+.resume { display: inline-block; margin-top: 12px; color: var(--neon); }
+
+/* Modals */
+.modal {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(5,6,11,0.65); backdrop-filter: blur(6px); z-index: 20;
+}
+.modal[aria-hidden="false"] { display: flex; }
+.modal-content {
+  width: min(720px, 92vw); background: #121423; border: 1px solid #2a2d4a; border-radius: 16px;
+  color: var(--text); padding: 18px 20px; box-shadow: var(--glow); position: relative;
+}
+.modal .close {
+  position: absolute; right: 12px; top: 8px; border: none; background: transparent; color: var(--text);
+  font-size: 24px; cursor: pointer;
+}
+.bullets { margin: 12px 0 0; padding: 0 0 0 18px; }
+.bullets li { margin: 6px 0; }
+
+/* Hover glow accents */
+.panel:hover, .project:hover, .contact-panel:hover { box-shadow: 0 0 30px rgba(124,92,255,0.25), 0 0 60px rgba(45,226,230,0.2); }
+
+/* Responsive fallback (mobile view) */
+@media (max-width: 880px) {
+  body { overflow: auto; }
+  .scene { perspective: none; height: auto; }
+  .camera, .hallway { transform: none !important; width: 100%; height: auto; }
+  .plane, .floor, .ceiling, .portal { display: none; }
+  .wall-left, .wall-right { position: static; width: auto; height: auto; background: transparent; }
+  .panel { position: static; width: auto; margin: 16px; }
+  .projects { width: auto; right: auto; }
+  .ui { position: static; padding: 12px 16px; }
+}
+
+</style>
+</head>
+<body>
+  <div class="ui">
+    <div class="brand">
+      <span class="dot"></span> Your Name
+    </div>
+    <div class="controls">
+      <button id="toggleMobileView" aria-label="Toggle mobile view">Mobile view</button>
+      <button id="resetCamera" aria-label="Reset camera">Reset camera</button>
+    </div>
+  </div>
+
+  <main class="scene" aria-label="3D hallway portfolio">
+    <!-- Camera wrapper allows gentle rotation -->
+    <div class="camera">
+      <!-- Hallway group -->
+      <div class="hallway">
+
+        <!-- Floor -->
+        <div class="plane floor"></div>
+
+        <!-- Ceiling with achievements -->
+        <div class="plane ceiling">
+          <div class="tile badge">
+            <h4>Certifications</h4>
+            <ul>
+              <li>Google Mobile Web Specialist</li>
+              <li>Meta Front-End Developer</li>
+              <li>freeCodeCamp Responsive Web Design</li>
+            </ul>
+          </div>
+          <div class="tile badge">
+            <h4>Open Source</h4>
+            <ul>
+              <li>PRs to awesome-frontend</li>
+              <li>Maintainer: css-utilities</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Left wall: About & Skills -->
+        <div class="plane wall wall-left">
+          <section class="panel about">
+            <h1>Front-End Developer</h1>
+            <p>I craft fast, accessible, and elegant web interfaces. I love translating ideas into polished, production-ready experiences.</p>
+            <p class="tagline">Crafting sleek, responsive web experiences.</p>
+          </section>
+
+          <section class="panel skills">
+            <h2>Skills & Tech Stack</h2>
+            <div class="skills-grid">
+              <div class="skill"><span>HTML</span></div>
+              <div class="skill"><span>CSS</span></div>
+              <div class="skill"><span>Sass</span></div>
+              <div class="skill"><span>JavaScript</span></div>
+              <div class="skill"><span>TypeScript</span></div>
+              <div class="skill"><span>React</span></div>
+              <div class="skill"><span>Next.js</span></div>
+              <div class="skill"><span>Vue</span></div>
+              <div class="skill"><span>Tailwind</span></div>
+              <div class="skill"><span>GSAP</span></div>
+              <div class="skill"><span>Testing Library</span></div>
+              <div class="skill"><span>Jest</span></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Right wall: Projects -->
+        <div class="plane wall wall-right">
+          <section class="panel projects">
+            <h2>Featured Projects</h2>
+
+            <div class="project-grid">
+              <article class="project" data-project="p1">
+                <div class="frame">
+                  <img alt="Project 1 thumbnail" src="https://picsum.photos/seed/p1/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>ShopFlow</h3>
+                  <p>Headless commerce UI with React + Tailwind, 95+ Lighthouse.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p1">View case study</a>
+                    <a href="#" class="btn ghost">Live demo</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="project" data-project="p2">
+                <div class="frame">
+                  <img alt="Project 2 thumbnail" src="https://picsum.photos/seed/p2/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>PulseUI</h3>
+                  <p>Component library with theming and accessibility baked in.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p2">View case study</a>
+                    <a href="#" class="btn ghost">Docs</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+
+              <article class="project" data-project="p3">
+                <div class="frame">
+                  <img alt="Project 3 thumbnail" src="https://picsum.photos/seed/p3/600/400" />
+                </div>
+                <div class="meta">
+                  <h3>CityGlide</h3>
+                  <p>Map-driven transit app with offline-first PWA features.</p>
+                  <div class="links">
+                    <a href="#" class="btn" data-open="p3">View case study</a>
+                    <a href="#" class="btn ghost">Live demo</a>
+                    <a href="#" class="btn ghost">GitHub</a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+        </div>
+
+        <!-- End portal: Contact -->
+        <a class="portal" href="#contact" aria-label="Contact portal">
+          <span class="glow"></span>
+          <span class="cta">Let's connect</span>
+        </a>
+
+        <!-- Contact panel sitting beyond the portal -->
+        <section id="contact" class="contact-panel">
+          <h2>Contact</h2>
+          <p>Interested in working together? Reach out and let’s build something great.</p>
+          <form class="contact-form" action="#" method="post">
+            <label>
+              <span>Name</span>
+              <input type="text" name="name" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" required />
+            </label>
+            <label>
+              <span>Message</span>
+              <textarea name="message" rows="4" required></textarea>
+            </label>
+            <button type="submit" class="btn">Send</button>
+          </form>
+          <div class="socials">
+            <a href="#">GitHub</a>
+            <a href="#">LinkedIn</a>
+            <a href="#">Twitter</a>
+            <a href="#">CodePen</a>
+          </div>
+          <a class="resume" href="#" download>Download resume (PDF)</a>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Modals -->
+  <div class="modal" id="modal-p1" aria-hidden="true" role="dialog" aria-label="Project 1 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>ShopFlow — Case Study</h3>
+      <p>Built a performant storefront using React, Tailwind, and a headless CMS. Implemented SSR for SEO, image optimization, and code splitting.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Front-end lead</li>
+        <li><strong>Highlights:</strong> Accessibility score 100, 95+ performance</li>
+        <li><strong>Tech:</strong> React, Next.js, Tailwind, Lighthouse CI</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-p2" aria-hidden="true" role="dialog" aria-label="Project 2 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>PulseUI — Case Study</h3>
+      <p>Designed a modular component library emphasizing semantic HTML, ARIA patterns, and theme tokens with CSS variables.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Creator</li>
+        <li><strong>Highlights:</strong> Theming, keyboard navigation, docs site</li>
+        <li><strong>Tech:</strong> Vite, TypeScript, Storybook</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="modal" id="modal-p3" aria-hidden="true" role="dialog" aria-label="Project 3 details">
+    <div class="modal-content">
+      <button class="close" aria-label="Close">×</button>
+      <h3>CityGlide — Case Study</h3>
+      <p>Built an offline-first PWA integrating map tiles and service workers. Implemented background sync and install prompts.</p>
+      <ul class="bullets">
+        <li><strong>Role:</strong> Front-end engineer</li>
+        <li><strong>Highlights:</strong> PWA, offline caching, responsive maps</li>
+        <li><strong>Tech:</strong> Vue, Workbox, Mapbox GL</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="script.js">// Subtle camera easing based on mouse movement
+(() => {
+  const camera = document.querySelector('.camera');
+  let targetX = 0, targetY = 0;
+  let currentX = 0, currentY = 0;
+
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  function onMove(e) {
+    const { innerWidth: w, innerHeight: h } = window;
+    const x = (e.clientX / w) * 2 - 1;  // -1..1
+    const y = (e.clientY / h) * 2 - 1;
+    targetX = clamp(x * 6, -8, 8);
+    targetY = clamp(y * -4, -6, 6);
+  }
+
+  function animate() {
+    currentX += (targetX - currentX) * 0.08;
+    currentY += (targetY - currentY) * 0.08;
+    camera.style.transform = `rotateY(${currentX}deg) rotateX(${currentY}deg)`;
+    requestAnimationFrame(animate);
+  }
+
+  window.addEventListener('mousemove', onMove);
+  animate();
+
+  // Controls
+  document.getElementById('resetCamera').addEventListener('click', () => {
+    targetX = 0; targetY = 0;
+  });
+
+  // Mobile view toggle: toggles a class to activate CSS fallback
+  const toggleBtn = document.getElementById('toggleMobileView');
+  let forcedMobile = false;
+  toggleBtn.addEventListener('click', () => {
+    forcedMobile = !forcedMobile;
+    document.body.classList.toggle('mobile-forced', forcedMobile);
+    toggleBtn.textContent = forcedMobile ? 'Desktop view' : 'Mobile view';
+    const scene = document.querySelector('.scene');
+    if (forcedMobile) {
+      scene.style.perspective = 'none';
+      camera.style.transform = 'none';
+    } else {
+      scene.style.perspective = '1200px';
+    }
+  });
+})();
+
+// Modal handling for project case studies
+(() => {
+  const openers = document.querySelectorAll('[data-open]');
+  const modals = {
+    p1: document.getElementById('modal-p1'),
+    p2: document.getElementById('modal-p2'),
+    p3: document.getElementById('modal-p3')
+  };
+
+  function openModal(id) {
+    const m = modals[id];
+    if (!m) return;
+    m.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(m) {
+    m.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  openers.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(btn.getAttribute('data-open'));
+    });
+  });
+
+  document.querySelectorAll('.modal').forEach(m => {
+    m.addEventListener('click', (e) => {
+      if (e.target.classList.contains('modal') || e.target.classList.contains('close')) {
+        closeModal(m);
+      }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && m.getAttribute('aria-hidden') === 'false') closeModal(m);
+    });
+  });
+})();
+</script>
+</body>
+</html>

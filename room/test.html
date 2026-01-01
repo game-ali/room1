@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Square with Trapeziums</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    background: #111827;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Center square */
+  .square {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 40%; height: 20%;
+    background: white;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+  }
+
+  /* Trapeziums around */
+  .trap {
+    position: absolute;
+    width: 100%; height: 100%;
+    z-index: 1;
+  }
+
+  /* Top trapezium */
+  .trap.top {
+    height: %;
+    clip-path: polygon(0 0, 100% 0, 70% 40%, 30% 40%);
+    background: linear-gradient(to bottom, #f43f5e, #7f1d1d);
+  }
+  .nav{
+    width: 100%;
+  height:10% ;
+  background: whit;
+  color: white;
+  
+  margin-top: 1.26px;
+  /* Adjust the polygon points to shape your trapezium:
+     (x%, y%) from top-left corner going clockwise */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 40%, 0% 40%);
+  /* This makes the top shorter than the bottom (a standard trapezium) */
+
+  
+  }
+  .fbl{
+    width: 100%;
+  height:78.10% ;
+  background: whit;
+  margin-top: 10.5px;
+  color: white;
+  
+  /* Adjust the polygon points to shape your trapezium:
+     (x%, y%) from top-left corner going clockwise */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 40%, 0% 40%);
+  /* This makes the top shorter than the bottom (a standard trapezium) */
+margin-bottom: 10px;
+display: flex;
+flex-direction: row;
+  }
+  .first-l{
+    display: flex;
+    height: 15.1%;
+    width: 15.1%;
+    background-color: lightskyblue;
+    border-radius: 50%;
+    margin-left: 23%;
+    margin-top: 5%;
+    perspective: 500px;
+    justify-content: center;
+    align-items: center;
+
+
+  }
+  .inside-fl{
+    height: 80%;
+    width: 80%;
+    background: linear-gradient(to right, blue,brown , green);
+    border-radius: 50%;
+  }
+  .fun{
+    display: flex;
+    height: 35.106%;
+    width: 21.05%;
+    background: blueviolet;
+    border-radius: 50%;
+    margin-left: 1%;
+    align-items: center;
+    justify-content: center;
+    al
+    
+
+
+  }
+  .fun-roll{
+    height: 90%;
+    width: 90%;
+    background: lightgoldenrodyellow;
+    border-radius: 50%;
+    align-self: center;
+  
+
+  
+
+
+  }
+  .second-l{
+    display: flex;
+    height: 15.1%;
+    width: 15.1%;
+    background: lightblue;
+    border-radius: 50%;
+    margin-top: 5%;
+    margin-left: 1%;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .inside-sl{
+    height: 80%;
+    width: 80%;
+    background: linear-gradient(to right, blue,brown , green);
+    border-radius: 50%;
+  }
+
+  /* Bottom trapezium */
+  .trap.bottom {
+    height: %;
+    clip-path: polygon(30% 60%, 70% 60%, 100% 100%, 0 100%);
+    background: linear-gradient(to top, #22c55e, #064e3b);
+    
+  }
+
+  /* Left trapezium */
+  .trap.left {
+    width: %;
+    clip-path: polygon(0 0, 30% 40%, 30% 60%, 0 100%);
+    background: linear-gradient(to right, #eab308, #78350f);
+  }
+
+  /* Right trapezium */
+  .trap.right {
+    width: %;
+    clip-path: polygon(70% 40%, 100% 0, 100% 100%, 70% 60%);
+    background: linear-gradient(to left, #06b6d4, #0c4a6e);
+    
+  }
+  /* ===== Ceiling Fan CSS ===== */
+.fan {
+  position: relative;
+  width: 220px;       /* overall size */
+  height: 220px;
+  margin: auto;
+  display: grid;
+  place-items: center;
+  animation: spin 1s linear infinite; /* rotation speed */
+}
+
+.hub {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 40% 35%, #4a4f58, #2b2f36 70%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 6px 12px rgba(255,255,255,.08),
+    inset 0 -10px 16px rgba(0,0,0,.25);
+}
+
+.hub::after {
+  content: "";
+  position: absolute;
+  inset: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, #2a2e35, #1c1f24);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+}
+
+/* Blades */
+.blade {
+  position: absolute;
+  width: 110px;       /* length of blade */
+  height: 22px;       /* thickness of blade */
+  left: 50%;
+  top: 50%;
+  transform-origin: 0% 50%;
+  background: linear-gradient(90deg, #4f5560 0%, #60656f 45%, #727883 100%);
+  border-radius: 10px 60px 60px 10px;
+  box-shadow:
+    inset 0 4px 6px rgba(255,255,255,.06),
+    inset 0 -6px 10px rgba(0,0,0,.18);
+}
+
+/* Position blades at 0, 90, 180, 270 degrees */
+.blade:nth-child(2) { transform: translate(-50%, -50%) rotate(90deg); }
+.blade:nth-child(3) { transform: translate(-50%, -50%) rotate(180deg); }
+.blade:nth-child(4) { transform: translate(-50%, -50%) rotate(270deg); }
+.blade:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg); }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* ===== Ceiling Light CSS ===== */
+.ceiling-light {
+  position: relative;
+  width: 120px;
+  height: 160px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Rod */
+.ceiling-light::before {
+  content: "";
+  position: absolute;
+  top: -60px;
+  width: 6px;
+  height: 60px;
+  background: #555;
+  border-radius: 3px;
+}
+
+/* Lamp body */
+.lamp {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: #444;
+  border-radius: 50% 50% 60% 60%;
+  box-shadow: inset 0 -10px 20px rgba(0,0,0,.3);
+}
+
+/* Light glow */
+.glow {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+    rgba(255,255,255,0.8) 0%,
+    rgba(255,255,255,0.2) 40%,
+    transparent 70%);
+  animation: colorChange 6s linear infinite;
+  filter: blur(20px);
+}
+
+/* Color changing animation */
+@keyframes colorChange {
+  0%   { background: radial-gradient(circle, rgba(255,0,0,0.7), transparent 70%); }
+  25%  { background: radial-gradient(circle, rgba(0,255,0,0.7), transparent 70%); }
+  50%  { background: radial-gradient(circle, rgba(0,0,255,0.7), transparent 70%); }
+  75%  { background: radial-gradient(circle, rgba(255,255,0,0.7), transparent 70%); }
+  100% { background: radial-gradient(circle, rgba(255,0,255,0.7), transparent 70%); }
+}
+/* ===== Cabinet with Buttons ===== */
+.cabinet {
+  position: absolute;
+  left: 40px;              /* stick to left side of room */
+  top: 50%;
+  transform: translateY(-50%) perspective(800px) rotateY(25deg);
+  width: 180px;
+  height: 300px;
+  background: #3a3f47;
+  border: 4px solid #222;
+  border-radius: 6px;
+  box-shadow: -8px 12px 20px rgba(0,0,0,0.4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 50px;
+  gap: 12px;
+  padding: 16px;
+}
+
+/* Buttons inside cabinet */
+.cabinet .button {
+  background: linear-gradient(#555, #333);
+  border-radius: 50%;
+  box-shadow:
+    inset -2px -4px 6px rgba(0,0,0,0.5),
+    inset 2px 4px 6px rgba(255,255,255,0.1),
+    0 4px 6px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+/* Press effect */
+.cabinet .button:active {
+  transform: scale(0.9);
+  background: linear-gradient(#222, #111);
+}
+
+
+</style>
+</head>
+<body>
+  <div class="scene">
+    <div class="trap top">
+      <div class="nav">
+        
+      </div>
+      <div class="fbl">
+        <div class="first-l">
+          <div class="inside-fl">
+            <div class="your-div">
+  <div class="ceiling-light">
+    <div class="lamp"></div>
+    <div class="glow"></div>
+  </div>
+</div>
+
+            
+          </div>
+          
+        </div>
+        <div class="fun">
+          <div class="fun-roll">
+            <div class="your-div">
+  <div class="fan">
+    <div class="hub"></div>
+    <div class="blade"></div>
+    <div class="blade"></div>
+    <div class="blade"></div>
+    <div class="blade"></div>
+  </div>
+</div>
+
+            
+          </div>
+        </div>
+        <div class="second-l">
+          <div class="inside-sl">
+            <div class="your-div">
+  <div class="ceiling-light">
+    <div class="lamp"></div>
+    <div class="glow"></div>
+  </div>
+</div>
+
+            
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+    <div class="trap bottom"></div>
+    <div class="trap left">
+      <div class="your-div">
+  <div class="cabinet">
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <!-- add more buttons as needed -->
+  </div>
+</div>
+
+      
+    </div>
+    <div class="trap right">
+      <div class="your-div">
+  <div class="cabinet">
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <div class="button"></div>
+    <!-- add more buttons as needed -->
+  </div>
+</div>
+
+    </div>
+
+    <div class="square"></div>
+  </div>
+</body>
+</html>
